@@ -87,7 +87,10 @@ async function unlock() {
     );
     const html = new TextDecoder().decode(pt);
     sessionStorage.setItem('matt_ib_family_pw', password);
-    document.open(); document.write(html); document.close();
+    // Blob navigation runs scripts reliably (document.write often does not).
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    location.replace(url);
   } catch (e) {
     err.textContent = 'Wrong password or failed to decrypt.';
   }
